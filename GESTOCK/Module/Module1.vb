@@ -5,7 +5,14 @@ Imports System.IO
 Imports System.Text
 Imports System.Security.Cryptography
 Module Module1
-    Public chemin As String = String.Format("Data Source=WHANNOU;Initial Catalog=GESTOCK;Integrated Security=True", Application.StartupPath)
+    ' Chaîne de connexion lue dans app.config (clé "GESTOCK") ; valeur de repli : SQL Express local.
+    Public chemin As String = ChaineConnexion()
+
+    Private Function ChaineConnexion() As String
+        Dim cs = System.Configuration.ConfigurationManager.ConnectionStrings("GESTOCK")
+        If cs IsNot Nothing AndAlso cs.ConnectionString <> "" Then Return cs.ConnectionString
+        Return "Data Source=.\SQLEXPRESS;Initial Catalog=GESTOCK;Integrated Security=True"
+    End Function
     Public cnx As New SqlConnection
     Public cmdcombo As SqlCommand = cnx.CreateCommand
     Public myreader As SqlDataReader
